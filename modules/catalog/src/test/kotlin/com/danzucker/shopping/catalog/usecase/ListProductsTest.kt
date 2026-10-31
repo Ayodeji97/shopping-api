@@ -63,6 +63,14 @@ internal class ListProductsTest {
         }
 
     @Test
+    fun `results are list models, reduced from the full details after filtering`() =
+        runTest {
+            val items = listProducts(ProductQuery(brand = "Sony")).items
+
+            items shouldBe listOf(catalog.first { it.id == 2L }.toProduct())
+        }
+
+    @Test
     fun `a blank filter is treated as no filter`() =
         runTest {
             ids(ProductQuery(brand = " ")) shouldBe listOf(1L, 2, 3, 4, 5)

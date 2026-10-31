@@ -1,9 +1,9 @@
 package com.danzucker.shopping.catalog
 
-import com.danzucker.shopping.catalog.domain.Product
+import com.danzucker.shopping.catalog.domain.ProductDetails
 import java.math.BigDecimal
 
-/** Builds a product with sensible defaults, so each test states only what it is about. */
+/** Builds a catalog record ([ProductDetails]) with sensible defaults, so each test states only what it is about. */
 @Suppress("LongParameterList") // A test builder: every parameter has a default.
 internal fun product(
     id: Long,
@@ -12,4 +12,4 @@ internal fun product(
     price: String = "10.00",
     brand: String = "Acme",
     category: String = "Misc",
-) = Product(id, name, description, "https://example.com/$id.jpg", BigDecimal(price), brand, category)
+) = ProductDetails(id, name, description, "https://example.com/$id.jpg", BigDecimal(price), brand, category)

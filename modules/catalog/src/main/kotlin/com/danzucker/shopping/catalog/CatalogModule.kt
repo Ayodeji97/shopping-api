@@ -4,7 +4,7 @@ import com.danzucker.shopping.catalog.api.ProductCatalog
 import com.danzucker.shopping.catalog.data.InMemoryProductRepository
 import com.danzucker.shopping.catalog.data.SeedProducts
 import com.danzucker.shopping.catalog.domain.ProductRepository
-import com.danzucker.shopping.catalog.usecase.GetProduct
+import com.danzucker.shopping.catalog.usecase.GetProductDetails
 import com.danzucker.shopping.catalog.usecase.ListProducts
 import com.danzucker.shopping.catalog.usecase.ProductCatalogAdapter
 import com.danzucker.shopping.catalog.usecase.SearchProducts
@@ -31,7 +31,7 @@ internal class CatalogModule {
     fun searchProducts(listProducts: ListProducts) = SearchProducts(listProducts)
 
     @Bean
-    fun getProduct(products: ProductRepository) = GetProduct(products)
+    fun getProductDetails(products: ProductRepository) = GetProductDetails(products)
 
     /** The module's public API, the only catalog bean other modules may depend on. */
     @Bean

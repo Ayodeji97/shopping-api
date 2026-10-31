@@ -1,6 +1,6 @@
 package com.danzucker.shopping.catalog.data
 
-import com.danzucker.shopping.catalog.domain.Product
+import com.danzucker.shopping.catalog.domain.ProductDetails
 import java.math.BigDecimal
 
 /**
@@ -11,9 +11,9 @@ import java.math.BigDecimal
 internal object SeedProducts {
     private fun image(slug: String) = "https://picsum.photos/seed/$slug/600/600"
 
-    val all: List<Product> =
+    val all: List<ProductDetails> =
         listOf(
-            Product(
+            ProductDetails(
                 1,
                 "AirPods Pro (2nd generation)",
                 "Wireless earbuds with active noise cancellation, adaptive transparency and USB-C charging case.",
@@ -22,7 +22,7 @@ internal object SeedProducts {
                 "Apple",
                 "Electronics",
             ),
-            Product(
+            ProductDetails(
                 2,
                 "WH-1000XM5 Headphones",
                 "Over-ear wireless headphones with industry-leading noise cancellation and 30-hour battery life.",
@@ -31,7 +31,7 @@ internal object SeedProducts {
                 "Sony",
                 "Electronics",
             ),
-            Product(
+            ProductDetails(
                 3,
                 "MacBook Pro 14\" M4",
                 "14-inch laptop with the M4 chip, Liquid Retina XDR display and up to 24 hours of battery life.",
@@ -40,7 +40,7 @@ internal object SeedProducts {
                 "Apple",
                 "Electronics",
             ),
-            Product(
+            ProductDetails(
                 4,
                 "Galaxy S25 Ultra",
                 "Android smartphone with a 200MP camera, built-in S Pen and titanium frame.",
@@ -49,7 +49,7 @@ internal object SeedProducts {
                 "Samsung",
                 "Electronics",
             ),
-            Product(
+            ProductDetails(
                 5,
                 "Air Max 90",
                 "Classic running-inspired sneakers with visible Air cushioning and a leather upper.",
@@ -58,7 +58,7 @@ internal object SeedProducts {
                 "Nike",
                 "Footwear",
             ),
-            Product(
+            ProductDetails(
                 6,
                 "Ultraboost Light",
                 "Lightweight running shoes with responsive Boost midsole for long-distance comfort.",
@@ -67,7 +67,7 @@ internal object SeedProducts {
                 "Adidas",
                 "Footwear",
             ),
-            Product(
+            ProductDetails(
                 7,
                 "Dri-FIT Running Tee",
                 "Breathable, sweat-wicking short-sleeve shirt for training and everyday runs.",
@@ -76,7 +76,7 @@ internal object SeedProducts {
                 "Nike",
                 "Apparel",
             ),
-            Product(
+            ProductDetails(
                 8,
                 "Classic Fit Denim Jacket",
                 "Timeless trucker jacket in rigid cotton denim with button-flap chest pockets.",
@@ -85,7 +85,7 @@ internal object SeedProducts {
                 "Levi's",
                 "Apparel",
             ),
-            Product(
+            ProductDetails(
                 9,
                 "V15 Detect Cordless Vacuum",
                 "Cordless stick vacuum with laser dust detection and up to 60 minutes of run time.",
@@ -94,7 +94,7 @@ internal object SeedProducts {
                 "Dyson",
                 "Home",
             ),
-            Product(
+            ProductDetails(
                 10,
                 "POÄNG Armchair",
                 "Bentwood armchair with a layer-glued birch frame and washable cushion cover.",
@@ -103,7 +103,7 @@ internal object SeedProducts {
                 "IKEA",
                 "Home",
             ),
-            Product(
+            ProductDetails(
                 11,
                 "Hydrating Facial Cleanser",
                 "Gentle, non-foaming cleanser with ceramides and hyaluronic acid for normal to dry skin.",
@@ -112,7 +112,7 @@ internal object SeedProducts {
                 "CeraVe",
                 "Beauty",
             ),
-            Product(
+            ProductDetails(
                 12,
                 "Kindle Paperwhite",
                 "Waterproof e-reader with a 7-inch glare-free display, adjustable warm light and weeks of battery.",

@@ -1,6 +1,6 @@
 package com.danzucker.shopping.catalog.data
 
-import com.danzucker.shopping.catalog.domain.Product
+import com.danzucker.shopping.catalog.domain.ProductDetails
 import com.danzucker.shopping.catalog.domain.ProductRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
@@ -13,15 +13,15 @@ import kotlinx.coroutines.flow.asFlow
  * no use case changes.
  */
 internal class InMemoryProductRepository(
-    products: List<Product>,
+    products: List<ProductDetails>,
 ) : ProductRepository {
-    private val byId: Map<Long, Product> = products.associateBy(Product::id)
+    private val byId: Map<Long, ProductDetails> = products.associateBy(ProductDetails::id)
 
     init {
         require(byId.size == products.size) { "Product ids must be unique." }
     }
 
-    override fun observeAll(): Flow<Product> = byId.values.asFlow()
+    override fun observeAll(): Flow<ProductDetails> = byId.values.asFlow()
 
-    override suspend fun findById(id: Long): Product? = byId[id]
+    override suspend fun findById(id: Long): ProductDetails? = byId[id]
 }

@@ -13,9 +13,10 @@ get {
 assert {
   res.status: eq 200
   res.body.totalItems: eq 2
-  res.body.items[0].brand: eq "Nike"
+  res.body.items[0].name: eq "Air Max 90"
+  res.body.items[0].brand: isUndefined
 }
 
 docs {
-  brand is an exact match that ignores case: "nike" finds Nike products.
+  brand is an exact match that ignores case: "nike" finds Nike products. Brand is not in list items; it is only a filter here.
 }

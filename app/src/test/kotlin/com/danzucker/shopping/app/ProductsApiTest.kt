@@ -32,10 +32,26 @@ internal class ProductsApiTest {
     }
 
     @Test
-    fun `every product carries all the fields the spec requires`() {
+    fun `product details carry every field the spec requires`() {
         val keys = get("/products/1").json<Map<String, Any>>("$").keys
 
-        keys shouldBe setOf("id", "name", "description", "imageUrl", "price", "brand", "category")
+        keys shouldBe DETAIL_FIELDS
+    }
+
+    @Test
+    fun `list items are summaries without brand or category`() {
+        get("/products").json<Map<String, Any>>("$.items[0]").keys shouldBe SUMMARY_FIELDS
+    }
+
+    @Test
+    fun `search results are summaries too`() {
+        get("/products/search?query=wireless").json<Map<String, Any>>("$.items[0]").keys shouldBe SUMMARY_FIELDS
+    }
+
+    @Test
+    fun `brand and category still filter the list even though they are not returned`() {
+        get("/products?brand=sony").json<List<String>>("$.items[*].name") shouldBe listOf("WH-1000XM5 Headphones")
+        get("/products?category=books").json<List<String>>("$.items[*].name") shouldBe listOf("Kindle Paperwhite")
     }
 
     @Test
@@ -92,5 +108,10 @@ internal class ProductsApiTest {
     @Test
     fun `an unknown route is 404 in the same error shape`() {
         get("/nope").json<String>("$.code") shouldBe "ROUTE_NOT_FOUND"
+    }
+
+    private companion object {
+        val SUMMARY_FIELDS = setOf("id", "name", "description", "imageUrl", "price")
+        val DETAIL_FIELDS = SUMMARY_FIELDS + setOf("brand", "category")
     }
 }

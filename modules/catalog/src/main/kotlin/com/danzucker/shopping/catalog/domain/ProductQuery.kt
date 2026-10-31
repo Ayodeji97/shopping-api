@@ -7,6 +7,9 @@ import java.math.BigDecimal
  * Every way a client can narrow the catalog, in one place, so `GET /products` and
  * `GET /products/search` share exactly the same filtering rules.
  *
+ * A query is checked against [ProductDetails], not the list model [Product], so brand and category
+ * can filter a list even though list items leave them out.
+ *
  * Matching rules:
  * - [text]: case-insensitive substring of the name OR the description ("partial matches").
  * - [brand] and [category]: exact match, ignoring case, so `nike` finds `Nike`.
@@ -33,14 +36,14 @@ internal data class ProductQuery(
         }
     }
 
-    fun matches(product: Product): Boolean =
+    fun matches(product: ProductDetails): Boolean =
         matchesText(product) &&
             (brand.isNullOrBlank() || product.brand.equals(brand.trim(), ignoreCase = true)) &&
             (category.isNullOrBlank() || product.category.equals(category.trim(), ignoreCase = true)) &&
             (priceMin == null || product.price >= priceMin) &&
             (priceMax == null || product.price <= priceMax)
 
-    private fun matchesText(product: Product): Boolean {
+    private fun matchesText(product: ProductDetails): Boolean {
         val term = text?.trim().orEmpty()
         return term.isEmpty() || product.name.contains(term, ignoreCase = true) || product.description.contains(term, ignoreCase = true)
     }

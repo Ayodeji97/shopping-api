@@ -16,8 +16,12 @@ assert {
   res.body.size: eq 20
   res.body.totalItems: eq 12
   res.body.items.length: eq 12
+  res.body.items[0].brand: isUndefined
+  res.body.items[0].category: isUndefined
 }
 
 docs {
   GET /products with no parameters: the first page, 20 per page by default, ordered by id. Expect 200 and all 12 seeded products.
+
+  List items are summaries (id, name, description, imageUrl, price). Brand and category are only in the details (GET /products/{id}).
 }

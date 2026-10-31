@@ -67,10 +67,10 @@ Each feature module has the same layers, and dependencies only point inwards:
 
 | Layer | Contains | Example |
 |---|---|---|
-| `domain` | Entities, repository **interfaces**, domain errors. Plain Kotlin. | `Product`, `ProductQuery`, `ProductRepository`, `SessionId` |
-| `usecase` | One class per use case, `suspend operator fun invoke`. Plain Kotlin. | `ListProducts`, `SearchProducts`, `AddToWishlist` |
+| `domain` | Entities, repository **interfaces**, domain errors. Plain Kotlin. | `Product`, `ProductDetails`, `ProductQuery`, `ProductRepository`, `SessionId` |
+| `usecase` | One class per use case, `suspend operator fun invoke`. Plain Kotlin. | `ListProducts`, `SearchProducts`, `GetProductDetails`, `AddToWishlist` |
 | `data` | Data sources: repository implementations. | `InMemoryProductRepository`, `InMemoryWishlistRepository` |
-| `presentation` | Controllers and request/response DTOs. | `ProductsController`, `WishlistController` |
+| `presentation` | Controllers and request/response DTOs. | `ProductsController`, `ProductResponse`, `ProductDetailsResponse`, `WishlistController` |
 | module root | DI wiring: the module's composition root. | `CatalogModule`, `WishlistModule` |
 
 ### Key decisions
@@ -80,7 +80,7 @@ Each feature module has the same layers, and dependencies only point inwards:
 - **The rules are tested.** `ArchitectureTest` (Konsist) fails the build if `domain` or `usecase` imports Spring, if an inner layer imports an outer one, if a controller lives outside `presentation`, or if the wishlist imports anything from the catalog except `catalog.api`.
 - **Coroutines and Flow.**
   - Controllers and use cases are `suspend` functions.
-  - Repositories expose `Flow`: the catalog streams products through `filter`, and each wishlist is a `StateFlow`.
+  - Repositories expose `Flow`: the catalog streams `ProductDetails` through `filter` and then `map(toProduct)`, and each wishlist is a `StateFlow`.
   - Concurrent wishlist edits are atomic, because `MutableStateFlow.update` is a compare-and-set loop.
 - **Errors.** The domain raises `DomainException` with a `Kind` (`INVALID_INPUT`, `NOT_FOUND`, `CONFLICT`) and a stable `code`. Only `GlobalExceptionHandler` maps a kind to an HTTP status.
 
@@ -101,7 +101,32 @@ Each wishlist belongs to the session named by the **`X-Session-Id`** header. The
 
 All responses are JSON. Errors are `application/problem+json`.
 
-### Product shape
+### Two product models
+
+The catalog has two models of a product, because the screens need two different amounts of it:
+
+| Domain model | Response | Fields | Used by |
+|---|---|---|---|
+| `Product` (list model) | `ProductResponse` | `id`, `name`, `description`, `imageUrl`, `price` | `GET /products`, `GET /products/search` |
+| `ProductDetails` (full record) | `ProductDetailsResponse` | all of the above **+ `brand`, `category`** | `GET /products/{id}` |
+
+- **Why two:** a product grid doesn't show brand or category, so list items leave them out, which keeps each page light on mobile.
+- **How they relate:** the data source stores `ProductDetails`, and lists are built from it with `ProductDetails.toProduct()`, so the list model can never contain anything the details don't.
+- **Filtering still works:** filters run against the full details, so `brand` and `category` filter the list even though list items don't return them.
+
+**List item** (`ProductResponse`):
+
+```json
+{
+  "id": 2,
+  "name": "WH-1000XM5 Headphones",
+  "description": "Over-ear wireless headphones with industry-leading noise cancellation and 30-hour battery life.",
+  "imageUrl": "https://picsum.photos/seed/wh-1000xm5/600/600",
+  "price": 399.99
+}
+```
+
+**Product details** (`ProductDetailsResponse`):
 
 ```json
 {
@@ -118,12 +143,12 @@ All responses are JSON. Errors are `application/problem+json`.
 ### Page envelope (list and search)
 
 ```json
-{ "items": [ /* products */ ], "page": 1, "size": 20, "totalItems": 12, "totalPages": 1 }
+{ "items": [ /* ProductResponse items */ ], "page": 1, "size": 20, "totalItems": 12, "totalPages": 1 }
 ```
 
 ### `GET /products`
 
-Lists products ordered by id, **20 per page by default**.
+Lists products ordered by id, **20 per page by default**. Items are `ProductResponse` (no brand or category).
 
 | Query param | Meaning |
 |---|---|
@@ -141,8 +166,8 @@ curl "http://localhost:8080/products?category=Electronics&price_max=400&size=2"
 ```json
 {
   "items": [
-    { "id": 1, "name": "AirPods Pro (2nd generation)", "price": 249.00, "brand": "Apple", "category": "Electronics", "...": "..." },
-    { "id": 2, "name": "WH-1000XM5 Headphones", "price": 399.99, "brand": "Sony", "category": "Electronics", "...": "..." }
+    { "id": 1, "name": "AirPods Pro (2nd generation)", "description": "Wireless earbuds with ...", "imageUrl": "https://picsum.photos/seed/airpods-pro/600/600", "price": 249.00 },
+    { "id": 2, "name": "WH-1000XM5 Headphones", "description": "Over-ear wireless headphones ...", "imageUrl": "https://picsum.photos/seed/wh-1000xm5/600/600", "price": 399.99 }
   ],
   "page": 1, "size": 2, "totalItems": 2, "totalPages": 1
 }
@@ -152,10 +177,10 @@ curl "http://localhost:8080/products?category=Electronics&price_max=400&size=2"
 
 ### `GET /products/{id}`
 
-Returns one product's details.
+Returns one product's full details (`ProductDetailsResponse`), including `brand` and `category`.
 
 ```bash
-curl http://localhost:8080/products/2      # 200, product shape above
+curl http://localhost:8080/products/2      # 200, ProductDetailsResponse above
 curl http://localhost:8080/products/999    # 404
 ```
 ```json
@@ -170,7 +195,7 @@ curl http://localhost:8080/products/999    # 404
 
 ### `GET /products/search?query=term`
 
-Finds products whose **name or description** contains `query`, as a case-insensitive partial match. It accepts the same filters and pagination as `GET /products`.
+Finds products whose **name or description** contains `query`, as a case-insensitive partial match. It accepts the same filters and pagination as `GET /products`, and returns `ProductResponse` items.
 
 ```bash
 curl "http://localhost:8080/products/search?query=wireless"              # AirPods + Sony headphones
@@ -251,13 +276,13 @@ Every error has the same shape. When a request parameter is at fault, `errors` n
 
 ## Testing
 
-`./gradlew test` runs 56 tests across all modules.
+`./gradlew test` runs 62 tests across all modules.
 
 | Kind | Where | What |
 |---|---|---|
-| **Use-case unit tests** | `modules/*/src/test/.../usecase` | `ListProducts`, `SearchProducts`, `GetProduct`, `AddToWishlist`, `RemoveFromWishlist`: filtering, case rules, inclusive price range, pagination, 404/409 rules, session isolation |
-| Domain and data tests | `SessionIdTest`, `PaginationTest`, `InMemoryWishlistRepositoryTest` | Header validation, paging math, **concurrency**: 500 parallel adds lose nothing, and 200 parallel adds of one product succeed exactly once |
-| HTTP tests | `app/src/test/.../*ApiTest` | Each endpoint through the full Spring context (`MockMvcTester`, which also covers async `suspend` handlers), including the error bodies |
+| **Use-case unit tests** | `modules/*/src/test/.../usecase` | `ListProducts`, `SearchProducts`, `GetProductDetails`, `AddToWishlist`, `RemoveFromWishlist`: filtering, case rules, inclusive price range, pagination, 404/409 rules, session isolation |
+| Domain and data tests | `ProductDetailsTest`, `SessionIdTest`, `PaginationTest`, `InMemoryWishlistRepositoryTest` | List-model mapping, header validation, paging math, **concurrency**: 500 parallel adds lose nothing, and 200 parallel adds of one product succeed exactly once |
+| HTTP tests | `app/src/test/.../*ApiTest` | Each endpoint through the full Spring context (`MockMvcTester`, which also covers async `suspend` handlers), including the exact field set of each product model and the error bodies |
 | Architecture tests | `app/src/test/.../ArchitectureTest` | The Clean Architecture and module-boundary rules above |
 
 **Testing approach:**

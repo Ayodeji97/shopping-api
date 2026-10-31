@@ -1,7 +1,7 @@
 package com.danzucker.shopping.catalog.presentation
 
 import com.danzucker.shopping.catalog.domain.ProductQuery
-import com.danzucker.shopping.catalog.usecase.GetProduct
+import com.danzucker.shopping.catalog.usecase.GetProductDetails
 import com.danzucker.shopping.catalog.usecase.ListProducts
 import com.danzucker.shopping.catalog.usecase.SearchProducts
 import com.danzucker.shopping.common.core.PageRequest
@@ -24,7 +24,7 @@ import java.math.BigDecimal
 internal class ProductsController(
     private val listProducts: ListProducts,
     private val searchProducts: SearchProducts,
-    private val getProduct: GetProduct,
+    private val getProductDetails: GetProductDetails,
 ) {
     /**
      * `GET /products`: list products, 20 per page by default, ordered by id.
@@ -35,7 +35,8 @@ internal class ProductsController(
      *
      * Pagination: `page` (1-based, default 1) and `size` (1-100, default 20).
      *
-     * 200 with a page envelope; 400 for a bad page, size, price or price range.
+     * 200 with a page envelope of `ProductResponse` items (no brand or category);
+     * 400 for a bad page, size, price or price range.
      */
     @GetMapping
     suspend fun listProducts(
@@ -56,7 +57,7 @@ internal class ProductsController(
      *
      * Accepts the same filters and pagination as `GET /products`.
      *
-     * 200 with a page envelope; 400 if `query` is missing or blank, or for any bad filter.
+     * 200 with a page envelope of `ProductResponse` items; 400 if `query` is missing or blank, or for any bad filter.
      */
     @GetMapping("/search")
     suspend fun searchProducts(
@@ -73,12 +74,12 @@ internal class ProductsController(
     }
 
     /**
-     * `GET /products/{id}`: one product's details.
+     * `GET /products/{id}`: one product's full details, including brand and category.
      *
      * 200 with the product; 404 if no product has this id; 400 if `id` is not a whole number.
      */
     @GetMapping("/{id}")
-    suspend fun getProduct(
+    suspend fun getProductDetails(
         @PathVariable id: Long,
-    ): ProductResponse = ProductResponse.from(getProduct.invoke(id))
+    ): ProductDetailsResponse = ProductDetailsResponse.from(getProductDetails.invoke(id))
 }
