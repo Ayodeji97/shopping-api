@@ -1,0 +1,14 @@
+# Partial detekt configuration, merged onto detekt's defaults
+# (`buildUponDefaultConfig = true` in kotlin-common-convention).
+# Only deliberate deviations live here, each with its reason.
+
+style:
+  MaxLineLength:
+    # Matches ktlint's own limit so the formatter and the linter agree.
+    maxLineLength: 140
+
+complexity:
+  LongParameterList:
+    # A handler's parameters are its query parameters: one per filter the spec defines.
+    # Binding them into an object would hide the public contract (and `price_min`'s name).
+    ignoreAnnotated: ['GetMapping']
