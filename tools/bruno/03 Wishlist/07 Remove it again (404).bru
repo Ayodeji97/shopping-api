@@ -1,0 +1,24 @@
+meta {
+  name: Remove it again (404)
+  type: http
+  seq: 07
+}
+
+delete {
+  url: {{baseUrl}}/wishlist/3
+  body: none
+  auth: none
+}
+
+headers {
+  X-Session-Id: {{sessionId}}
+}
+
+assert {
+  res.status: eq 404
+  res.body.code: eq "NOT_IN_WISHLIST"
+}
+
+docs {
+  Removing a product that is not in the wishlist is a 404.
+}

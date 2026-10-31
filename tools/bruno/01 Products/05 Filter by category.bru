@@ -1,0 +1,20 @@
+meta {
+  name: Filter by category
+  type: http
+  seq: 05
+}
+
+get {
+  url: {{baseUrl}}/products?category=Electronics
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.totalItems: eq 4
+}
+
+docs {
+  category is an exact match (ignoring case).
+}

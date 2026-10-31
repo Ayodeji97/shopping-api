@@ -1,0 +1,29 @@
+meta {
+  name: Get wishlist
+  type: http
+  seq: 04
+}
+
+get {
+  url: {{baseUrl}}/wishlist
+  body: none
+  auth: none
+}
+
+headers {
+  X-Session-Id: {{sessionId}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("productIds is [3,5]", function () {
+    expect(res.getBody().productIds).to.eql([3,5]);
+  });
+}
+
+docs {
+  GET /wishlist returns the product ids in this session's wishlist.
+}

@@ -1,0 +1,29 @@
+meta {
+  name: Add another product
+  type: http
+  seq: 03
+}
+
+post {
+  url: {{baseUrl}}/wishlist/5
+  body: none
+  auth: none
+}
+
+headers {
+  X-Session-Id: {{sessionId}}
+}
+
+assert {
+  res.status: eq 201
+}
+
+tests {
+  test("productIds is [3,5]", function () {
+    expect(res.getBody().productIds).to.eql([3,5]);
+  });
+}
+
+docs {
+  Ids are kept in the order they were added.
+}

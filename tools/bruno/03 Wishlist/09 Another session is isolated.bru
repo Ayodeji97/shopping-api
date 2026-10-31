@@ -1,0 +1,24 @@
+meta {
+  name: Another session is isolated
+  type: http
+  seq: 09
+}
+
+get {
+  url: {{baseUrl}}/wishlist
+  body: none
+  auth: none
+}
+
+headers {
+  X-Session-Id: {{otherSessionId}}-{{sessionId}}
+}
+
+assert {
+  res.status: eq 200
+  res.body.productIds.length: eq 0
+}
+
+docs {
+  A different X-Session-Id has its own wishlist: nothing added above is visible here.
+}

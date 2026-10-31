@@ -1,0 +1,20 @@
+meta {
+  name: Filter by price range
+  type: http
+  seq: 06
+}
+
+get {
+  url: {{baseUrl}}/products?price_min=100&price_max=200
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.totalItems: eq 4
+}
+
+docs {
+  price_min and price_max are inclusive bounds; either can be used alone.
+}

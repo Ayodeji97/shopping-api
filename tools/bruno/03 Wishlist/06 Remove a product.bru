@@ -1,0 +1,23 @@
+meta {
+  name: Remove a product
+  type: http
+  seq: 06
+}
+
+delete {
+  url: {{baseUrl}}/wishlist/3
+  body: none
+  auth: none
+}
+
+headers {
+  X-Session-Id: {{sessionId}}
+}
+
+assert {
+  res.status: eq 204
+}
+
+docs {
+  DELETE /wishlist/{productId}: 204 No Content.
+}

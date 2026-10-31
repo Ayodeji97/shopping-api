@@ -1,0 +1,21 @@
+meta {
+  name: Non-numeric id (400)
+  type: http
+  seq: 02
+}
+
+get {
+  url: {{baseUrl}}/products/abc
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 400
+  res.body.code: eq "INVALID_PARAMETER"
+  res.body.errors[0].field: eq "id"
+}
+
+docs {
+  A malformed parameter is a 400 naming the parameter in `errors`.
+}

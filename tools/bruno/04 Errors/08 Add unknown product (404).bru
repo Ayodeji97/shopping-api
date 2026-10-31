@@ -1,0 +1,24 @@
+meta {
+  name: Add unknown product (404)
+  type: http
+  seq: 08
+}
+
+post {
+  url: {{baseUrl}}/wishlist/999
+  body: none
+  auth: none
+}
+
+headers {
+  X-Session-Id: demo-errors
+}
+
+assert {
+  res.status: eq 404
+  res.body.code: eq "PRODUCT_NOT_FOUND"
+}
+
+docs {
+  Only products in the catalog can be added.
+}

@@ -1,0 +1,29 @@
+meta {
+  name: Add a product
+  type: http
+  seq: 02
+}
+
+post {
+  url: {{baseUrl}}/wishlist/3
+  body: none
+  auth: none
+}
+
+headers {
+  X-Session-Id: {{sessionId}}
+}
+
+assert {
+  res.status: eq 201
+}
+
+tests {
+  test("productIds is [3]", function () {
+    expect(res.getBody().productIds).to.eql([3]);
+  });
+}
+
+docs {
+  POST /wishlist/{productId}: 201 with the updated wishlist.
+}

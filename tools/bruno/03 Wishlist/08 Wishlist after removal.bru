@@ -1,0 +1,29 @@
+meta {
+  name: Wishlist after removal
+  type: http
+  seq: 08
+}
+
+get {
+  url: {{baseUrl}}/wishlist
+  body: none
+  auth: none
+}
+
+headers {
+  X-Session-Id: {{sessionId}}
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("productIds is [5]", function () {
+    expect(res.getBody().productIds).to.eql([5]);
+  });
+}
+
+docs {
+  Only product 5 is left.
+}

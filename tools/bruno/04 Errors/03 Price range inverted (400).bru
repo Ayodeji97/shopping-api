@@ -1,0 +1,21 @@
+meta {
+  name: Price range inverted (400)
+  type: http
+  seq: 03
+}
+
+get {
+  url: {{baseUrl}}/products?price_min=50&price_max=10
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 400
+  res.body.code: eq "INVALID_PRICE_RANGE"
+  res.body.errors[0].field: eq "price_min"
+}
+
+docs {
+  price_min greater than price_max is rejected with both values in the message.
+}

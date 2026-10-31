@@ -1,0 +1,9 @@
+docs {
+  # Shopping Wishlist & Product Discovery API
+
+  Start the API (`./gradlew :app:bootRun`), choose the **local** environment, then **Run Collection**.
+  Folders run in order: products, search, a full wishlist story, then every error case.
+  Every request checks its own status code and body, so a green run means the API behaves as documented.
+
+  The wishlist folder creates a fresh `sessionId` on every run, so the collection can be rerun without stale 409s.
+}

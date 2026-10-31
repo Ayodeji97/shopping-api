@@ -1,0 +1,20 @@
+meta {
+  name: Blank search query (400)
+  type: http
+  seq: 06
+}
+
+get {
+  url: {{baseUrl}}/products/search?query=
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 400
+  res.body.code: eq "MISSING_SEARCH_QUERY"
+}
+
+docs {
+  A search needs a term.
+}

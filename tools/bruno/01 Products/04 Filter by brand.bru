@@ -1,0 +1,21 @@
+meta {
+  name: Filter by brand
+  type: http
+  seq: 04
+}
+
+get {
+  url: {{baseUrl}}/products?brand=nike
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.totalItems: eq 2
+  res.body.items[0].brand: eq "Nike"
+}
+
+docs {
+  brand is an exact match that ignores case: "nike" finds Nike products.
+}

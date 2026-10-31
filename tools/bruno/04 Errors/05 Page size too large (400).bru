@@ -1,0 +1,20 @@
+meta {
+  name: Page size too large (400)
+  type: http
+  seq: 05
+}
+
+get {
+  url: {{baseUrl}}/products?size=500
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 400
+  res.body.code: eq "INVALID_PAGE_SIZE"
+}
+
+docs {
+  size must be between 1 and 100.
+}

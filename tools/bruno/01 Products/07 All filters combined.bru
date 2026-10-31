@@ -1,0 +1,21 @@
+meta {
+  name: All filters combined
+  type: http
+  seq: 07
+}
+
+get {
+  url: {{baseUrl}}/products?brand=Apple&category=Electronics&price_max=500
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.totalItems: eq 1
+  res.body.items[0].name: eq "AirPods Pro (2nd generation)"
+}
+
+docs {
+  Filters combine with AND.
+}

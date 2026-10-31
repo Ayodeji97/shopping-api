@@ -1,0 +1,21 @@
+meta {
+  name: Search with a filter
+  type: http
+  seq: 02
+}
+
+get {
+  url: {{baseUrl}}/products/search?query=running&brand=adidas
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.totalItems: eq 1
+  res.body.items[0].name: eq "Ultraboost Light"
+}
+
+docs {
+  Search accepts the same filters as GET /products. "running" alone matches 3 products; brand=adidas narrows it to one.
+}

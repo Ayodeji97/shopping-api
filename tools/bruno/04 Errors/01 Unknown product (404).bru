@@ -1,0 +1,21 @@
+meta {
+  name: Unknown product (404)
+  type: http
+  seq: 01
+}
+
+get {
+  url: {{baseUrl}}/products/999
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 404
+  res.body.code: eq "PRODUCT_NOT_FOUND"
+  res.body.detail: contains "GET /products"
+}
+
+docs {
+  Errors use RFC 9457 problem+json with a stable `code` and an actionable `detail`.
+}

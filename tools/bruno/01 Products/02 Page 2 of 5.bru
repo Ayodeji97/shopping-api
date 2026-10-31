@@ -1,0 +1,22 @@
+meta {
+  name: Page 2 of 5
+  type: http
+  seq: 02
+}
+
+get {
+  url: {{baseUrl}}/products?page=2&size=5
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.items.length: eq 5
+  res.body.items[0].id: eq 6
+  res.body.totalPages: eq 3
+}
+
+docs {
+  Pagination is 1-based. page=2&size=5 returns products 6-10; totalPages tells the client how far it can go.
+}

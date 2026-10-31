@@ -1,0 +1,20 @@
+meta {
+  name: Non-numeric price (400)
+  type: http
+  seq: 04
+}
+
+get {
+  url: {{baseUrl}}/products?price_min=cheap
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 400
+  res.body.code: eq "INVALID_PARAMETER"
+}
+
+docs {
+  Prices must be numbers.
+}

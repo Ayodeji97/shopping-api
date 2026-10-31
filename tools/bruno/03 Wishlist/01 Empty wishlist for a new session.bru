@@ -1,0 +1,28 @@
+meta {
+  name: Empty wishlist for a new session
+  type: http
+  seq: 01
+}
+
+get {
+  url: {{baseUrl}}/wishlist
+  body: none
+  auth: none
+}
+
+headers {
+  X-Session-Id: {{sessionId}}
+}
+
+script:pre-request {
+  bru.setVar("sessionId", "demo-" + Date.now());
+}
+
+assert {
+  res.status: eq 200
+  res.body.productIds.length: eq 0
+}
+
+docs {
+  Every wishlist call sends X-Session-Id. This request generates a fresh session id for the run (see the pre-request script), so a new session starts with an empty wishlist.
+}

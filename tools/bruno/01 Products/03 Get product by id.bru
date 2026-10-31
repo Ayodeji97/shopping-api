@@ -1,0 +1,25 @@
+meta {
+  name: Get product by id
+  type: http
+  seq: 03
+}
+
+get {
+  url: {{baseUrl}}/products/2
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.id: eq 2
+  res.body.name: eq "WH-1000XM5 Headphones"
+  res.body.brand: eq "Sony"
+  res.body.category: eq "Electronics"
+  res.body.price: eq 399.99
+  res.body.imageUrl: isString
+}
+
+docs {
+  GET /products/{id}: a product with every required field (id, name, description, imageUrl, price, brand, category).
+}

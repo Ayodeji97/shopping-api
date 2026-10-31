@@ -1,0 +1,21 @@
+meta {
+  name: Wishlist without session (400)
+  type: http
+  seq: 07
+}
+
+get {
+  url: {{baseUrl}}/wishlist
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 400
+  res.body.code: eq "MISSING_SESSION_ID"
+  res.body.errors[0].field: eq "X-Session-Id"
+}
+
+docs {
+  Every wishlist call needs an X-Session-Id header; the error says so.
+}

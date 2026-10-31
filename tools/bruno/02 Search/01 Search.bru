@@ -1,0 +1,20 @@
+meta {
+  name: Search
+  type: http
+  seq: 01
+}
+
+get {
+  url: {{baseUrl}}/products/search?query=wireless
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.totalItems: eq 2
+}
+
+docs {
+  GET /products/search?query=term: case-insensitive partial match on name OR description. "wireless" matches the AirPods and the Sony headphones.
+}

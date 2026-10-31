@@ -1,0 +1,24 @@
+meta {
+  name: Add a duplicate (409)
+  type: http
+  seq: 05
+}
+
+post {
+  url: {{baseUrl}}/wishlist/3
+  body: none
+  auth: none
+}
+
+headers {
+  X-Session-Id: {{sessionId}}
+}
+
+assert {
+  res.status: eq 409
+  res.body.code: eq "ALREADY_IN_WISHLIST"
+}
+
+docs {
+  A product can only be in a wishlist once: 409 Conflict tells the client its local state is stale.
+}

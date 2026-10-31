@@ -1,0 +1,21 @@
+meta {
+  name: Search paginated
+  type: http
+  seq: 03
+}
+
+get {
+  url: {{baseUrl}}/products/search?query=e&page=2&size=5
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.page: eq 2
+  res.body.items.length: eq 5
+}
+
+docs {
+  Search results are paginated exactly like the product list.
+}

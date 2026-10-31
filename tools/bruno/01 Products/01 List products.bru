@@ -1,0 +1,23 @@
+meta {
+  name: List products
+  type: http
+  seq: 01
+}
+
+get {
+  url: {{baseUrl}}/products
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.page: eq 1
+  res.body.size: eq 20
+  res.body.totalItems: eq 12
+  res.body.items.length: eq 12
+}
+
+docs {
+  GET /products with no parameters: the first page, 20 per page by default, ordered by id. Expect 200 and all 12 seeded products.
+}
