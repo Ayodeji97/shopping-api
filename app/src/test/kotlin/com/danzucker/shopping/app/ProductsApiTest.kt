@@ -32,7 +32,7 @@ internal class ProductsApiTest {
     }
 
     @Test
-    fun `product details carry every field the spec requires`() {
+    fun `product details carry every product field`() {
         val keys = get("/products/1").json<Map<String, Any>>("$").keys
 
         keys shouldBe DETAIL_FIELDS

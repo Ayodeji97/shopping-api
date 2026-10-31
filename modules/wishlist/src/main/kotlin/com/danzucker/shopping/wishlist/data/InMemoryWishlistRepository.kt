@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap
  * In-memory wishlists, **one per session**: the map key is the client's `X-Session-Id`.
  *
  * ## Why per-session and not one singleton list
- * The spec allows either. A single list shared by every user would mean one shopper's wishlist
+ * A single list shared by every user would mean one shopper's wishlist
  * shows up on everyone else's phone, which no real shopping app does. Scoping by session behaves
  * like a real per-user wishlist without needing authentication.
  *
@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap
  * Each session's list is a [MutableStateFlow] changed with `update` (an atomic compare-and-set loop), so concurrent adds or
  * removes on one session never lose an update, and different sessions never contend.
  *
- * ## Limits (acceptable for this assessment)
+ * ## Limits
  * Data lives only as long as the process, and sessions are never evicted. A production version
  * would put this behind the same [WishlistRepository] interface on Redis or a database, with a TTL.
  * Reads never create a session, so only clients that actually add something use memory.

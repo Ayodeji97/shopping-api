@@ -3,7 +3,7 @@
 > Status: implemented. Revision 2026-10-31 (during build): the layers were renamed to the spec's own Clean Architecture vocabulary (`domain` / `usecase` / `data` / `presentation`). `domain` and `usecase` were also made framework-free: no Spring annotations, with each module wired in one `@Configuration` (`CatalogModule`, `WishlistModule`) and the rule enforced by Konsist.
 
 ## Context
-Take-home assessment: a Kotlin backend REST API for product browsing, search/filter, and a per-user in-memory wishlist, built with Clean Architecture, DI, Coroutines/Flow, docs, and unit tests. The user wants a **spec-driven** approach and a **modular monolith** that mirrors their existing `moyi-backend` project (`~/Desktop/Learning/project_base_learning/Gratitude/moyi-backend`) conventions. The target directory `~/Desktop/shopping_app/Shopping_App` currently holds only a bare Kotlin JVM Gradle scaffold (`build.gradle.kts`, `src/main/kotlin/Main.kt`) and is not a git repo.
+A Kotlin backend REST API for product browsing, search/filter, and a per-user in-memory wishlist, built with Clean Architecture, DI, Coroutines/Flow, docs, and unit tests. The user wants a **spec-driven** approach and a **modular monolith** that mirrors their existing `moyi-backend` project (`~/Desktop/Learning/project_base_learning/Gratitude/moyi-backend`) conventions. The target directory `~/Desktop/shopping_app/Shopping_App` currently holds only a bare Kotlin JVM Gradle scaffold (`build.gradle.kts`, `src/main/kotlin/Main.kt`) and is not a git repo.
 
 
 ## Decisions (from the user)
@@ -26,7 +26,7 @@ Take-home assessment: a Kotlin backend REST API for product browsing, search/fil
 - `POST /wishlist/{id}` → 201 with `{productIds}`; `DELETE` → 204; `GET /wishlist` → 200 `{productIds}` in insertion order (empty list for a new session).
 - Results sorted by id for stable pagination. Page beyond the end → 200 with empty `items`.
 - No Testcontainers/JPA/security/Actuator beyond `/actuator/health`; springdoc kept (Swagger UI is useful for a reviewer). No session eviction — noted as a known limitation in README.
-- Keep JaCoCo/detekt/ktlint from Moyi conventions; drop the 80% coverage gate to non-blocking report (assessment scope).
+- Keep JaCoCo/detekt/ktlint from Moyi conventions; drop the 80% coverage gate to non-blocking report (project scope).
 
 ## Module layout
 ```

@@ -50,7 +50,7 @@ testing {
     }
 }
 
-// Coverage is reported, not gated: an assessment-sized codebase gains nothing from
+// Coverage is reported, not gated: a codebase this size gains nothing from
 // a floor, and a floor invites tests written to move a number.
 tasks.named<Test>("test") {
     finalizedBy(tasks.named("jacocoTestReport"))

@@ -5,7 +5,7 @@ import com.danzucker.shopping.common.core.InvalidInputException
 /**
  * Identifies whose wishlist a request is about. The client sends it in the `X-Session-Id` header.
  *
- * Anonymous by design (the spec requires no authentication): a mobile app generates a UUID on
+ * Anonymous by design (there is no authentication): a mobile app generates a UUID on
  * first launch, stores it, and sends it on every wishlist call. Restricting it to a short, safe
  * alphabet keeps it from being used to inject content into logs.
  */

@@ -3,7 +3,7 @@
 **Status:** Accepted, 2026-10-31
 
 ## Context
-The assessment asks for Clean Architecture (entities, repositories, data sources, use cases, a controller layer), dependency injection, and Coroutines/Flow. The API has two features, a catalog and a wishlist, and the wishlist needs to know whether a product exists.
+The project is built around Clean Architecture (entities, repositories, data sources, use cases, a controller layer), dependency injection, and Coroutines/Flow. The API has two features, a catalog and a wishlist, and the wishlist needs to know whether a product exists.
 
 ## Decision
 - **One deployable, several Gradle modules:** `app` (composition root), `common:core`, `common:web`, `modules:catalog` and `modules:wishlist`.
@@ -19,4 +19,4 @@ The assessment asks for Clean Architecture (entities, repositories, data sources
 ## Consequences
 - Business rules can be unit-tested with plain constructors and fakes, without a Spring context.
 - Moving the catalog to a database, or extracting it into its own service, changes `data` and `ProductCatalog`'s implementation only.
-- There is more structure than a two-endpoint API strictly needs. That is accepted, because demonstrating the structure is part of the brief.
+- There is more structure than a two-endpoint API strictly needs. That is accepted, because it keeps each feature independent as the API grows.

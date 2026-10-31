@@ -3,7 +3,7 @@
 **Status:** Accepted, 2026-10-31
 
 ## Context
-The spec allows an in-memory wishlist that is either one per unique session or a singleton for all users, with the choice justified. No authentication is required.
+The wishlist is held in memory and there is no authentication. It could be one list per unique session or a single list for all users.
 
 ## Decision
 There is one wishlist per session, keyed by an `X-Session-Id` header that the client generates once (a UUID) and stores on the device. A missing or malformed header is a 400 that says what to send.
